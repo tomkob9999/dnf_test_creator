@@ -15,8 +15,11 @@ except for very unlikely patterns like this one, but it is negligiable because c
 The high level algorithm follows overall as follows.
 
 1. Convert the input to Simplified DNF form. (such as "(a & b) | (c & d)".  Expressions like "(a or (a and b)) is simplified to "a")
+
 {Input Expression} -> DNF_Format(Input Expression)
-2. Generates the True cases from DNF_Format(Input Expression (each of conditions connected by OR).
+3. Generates the True cases from DNF_Format(Input Expression (each of conditions connected by OR).
+
 DNF_Format(Input Expression) -> True cases
 4. Create False cases by extracting each of selement from each condition connected by OR)
+
 True cases -> One_Variable_Dropped(True cases) = False Cases
