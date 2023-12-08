@@ -16,12 +16,12 @@ The high level algorithm follows as follows.
 
 1. Convert the input to Simplified DNF form. (such as "(a & b) | (c & d)".  Expressions like "(a or (a and b)) is simplified to "a")
 
-- {Input Expression} -> DNF_Format(Input Expression)
+- {Input Expression} -> {DNF_Format(Input Expression)}
 
 2. Generates the True cases from DNF_Format(Input Expression (each of conditions connected by OR).
 
-- DNF_Format(Input Expression) -> True cases
+- DNF_Format(Input Expression) -> PickoutTrueVariables(DNF_Format(Input Expression)) == {True cases}
 
 3. Create False cases by extracting each of selement from each condition connected by OR)
 
-- True cases -> One_Variable_Dropped(True cases) = False Cases
+- True cases -> Variable_Drop_One_At_a_Time(True cases) == {False Cases}
