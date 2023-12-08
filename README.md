@@ -9,7 +9,7 @@ The initial motive of creating this tool was to say Nay to managers with math di
 Some Highlights
 - The output size is O(n^2) (typically, O(n) < T(n) < O(2n)) to the number of variables n in the input, whereas the Cartesian product grows by O(2^n).  For example, with 11 input variables, the tool generates typically about 15, whereas the Cartesian products grow to 2048.
 
-- The very small number of test cases actually cover all the cartesion product patterns including below implementation mistakes
+- The linearly grown handleful of test cases virtually cover all the cartesion product patterns including below implementation mistakes
   - change of operators, like a & b & c, actually -> a & b | c, by mistake
   - omission of variables, like a & b & c, actually -> a & b | c, by mistake (mistaken additional variables cannot capture, but Cartesian product cases cannot cover them, so irrelavant)
   - replace with negation, like a & b & c, actually -> a & b * !c, by mistake
