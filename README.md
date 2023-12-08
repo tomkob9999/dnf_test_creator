@@ -41,3 +41,11 @@ TIPS:
 - When there are multiple actions for each condition like IF A THEN DO 1 ELSE DO 2, then use IF-ELSE with different condition attached to each IF-ELSE branches.  The number of test cases grow only linearly by the number of conditions.  They only add up, but not multiply.
 - For negations, use a separate variable.  For example, if there is a and !a, then use a and na as if they are different variables, for example.
 - THE TOOL CAN BE USED TO TEST YOUR BOOLEAN EXPRESSIONS, NOT TO MENTION.
+
+
+HOW TO RUN:
+
+You can copy the Pythothon script on your favorite Jupyter-like notebook, or run the script from the command line. (I often use Kaggle due to laziness and convenience)
+
+inp = "(a*b)+(a*b*c)"
+DNF_Test_Creater.solve(inp)
