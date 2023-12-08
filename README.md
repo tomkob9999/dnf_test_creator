@@ -1,6 +1,6 @@
 # DNF Test Creator
 
-This tool automatically generates the test cases from a boolean expression (AND or OR without NOT) in the input string.  This uses the conditional probabiliy where the chance of some tests pass is almost certain with only negligiable margin if a very small number of certain set of test cases have already passed due to the property of DNF (connected by AND for each row).
+This tool automatically generates the test cases from a boolean expression (AND or OR without NOT) in the input string.  This uses the conditional probabiliy-based approach by ommiting neglectably unlikely cases where the chance of some tests pass is almost certain with only negligiable margin if a very small number of certain set of test cases have already passed due to the property of simplified DNF (connected by AND for each row).
 
 Some Highlights
 - The output size is O(n^2) (typically, O(n) < T(n) < O(2n)) to the number of variables n in the input, whereas the Cartesian product grows by O(2^n).  For example, with 11 input variables, the generated test cases are usually around 15, where as the Cartesian products grow to 2048.
