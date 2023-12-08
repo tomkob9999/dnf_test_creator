@@ -15,6 +15,7 @@ Some Highlights
   - replace with negation, like a & b & c, actually -> a & b * !c, by mistake
 - ,except for very unlikely erroneous patterns including, or maybe only, the one below, but it should be neglectable because chance of such occurence seems to be much lower than other defects that cannot be detected by even Cartesian product test cases.
   - additional clause connected by OR that contains multiple negations (one addition can be caught as explained above), like a & b & c, actually -> a & b & c | a & !b & !c, by mistake
+- Converting a bool expression into DNF is a known NP problem, so the generation takes time as the number of variables.  The simpy library got stuck then the variables are above 10.  In my enviroment, I use my own algorithm and takes about 1 min for 13 varaiables.  It is much faster than sympy, but sill it becomes quite slow at 13 or 14 variables (which can be pain but nothing compared to the test effor which can takes days, weeks or months for large, yet innective, set of test cases)  
  
 The high level algorithm follows as follows.
 
