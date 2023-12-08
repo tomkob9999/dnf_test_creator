@@ -7,7 +7,7 @@ The tool was developed mainly to use in black box testing where the logic in the
 The initial motive of creating this tool was my answer to managers with math difficulty who try to convince the test team to perform all-pattern tests, which use Cartesian product patterns in effect, which will be guaranteed to be surrendered by the test team because such all-pattern test case volume grows exponentially, and humans or automated test tools only prove to be useless against such sheer volume.  (Scientists and engineers have officially surrendered to deal with exponential growth items for ages, and instead tried to discover ways to work around NP or control the growth.)
 
 Some Highlights
-- The output size is O(n^2) (typically, O(n) < T(n) < O(2n)) to the number of variables n in the input, whereas the Cartesian product grows by O(2^n).  For example, with 11 input variables, the tool generates typically about 15, whereas the Cartesian products grow to 2048.
+- The output size is O(n) to the number of variables n in the input, whereas the Cartesian product grows by O(2^n).  For example, with 11 input variables, the tool generates typically about 15, whereas the Cartesian products grow to 2048.
 
 - The linearly grown handleful of test cases virtually cover all the cartesion product patterns including below implementation mistakes
   - change of operators, like a & b & c, actually -> a & b | c, by mistake
