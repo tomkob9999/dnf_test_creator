@@ -1,6 +1,6 @@
 # dnf_test_creator
 
-This tool automatically generates the test cases from a boolean expression (AND or OR without NOT) in the input string.
+This tool automatically generates the test cases from a boolean expression (AND or OR without NOT) in the input string.  This uses the conditional probabiliy where the chance of some tests pass is almost certain with only negligiable margin if a very small number of certain set of test cases have already passed due to the property of DNF (connected by AND for each row).
 
 Some Highlights
 - The output size is O(n^2) (typically, O(n) < T(n) < O(2n)) to the number of variables n in the input, whereas the Cartesian product grows by O(2^n).  For example, with 11 input variables, the generated test cases are usually around 15, where as the Cartesian products grow to 2048.
@@ -20,15 +20,15 @@ The high level algorithm follows as follows.
 
 2. Generates the True cases from DNF_Format(Input Expression (each of conditions connected by OR).
 
-- DNF_Format(Input Expression) -> PickoutTrueVariables(DNF_Format(Input Expression)) == {True cases}
+- DNF_Format(Input Expression) -> PickoutTrueVariables(DNF_Format(Input Expression)) == {true cases}
 
 3. Create False cases by extracting each of selement from each condition connected by OR)
 
-- True cases -> Variable_Drop_One_At_a_Time(True cases) == {False Cases}
+- {true cases} -> Variable_Drop_One_At_a_Time({true cases}) == {talse Cases}
 
 
 TIPS:
 
 - Expressions like IF-ELSE can always be converted to AND and OR as long as the expected action is one.
-- When there are multiple actions for each condition like IF A THEN DO 1 ELSE DO 2, then use IF-ELSE with different condition attached to each IF-ELSE branches.  The number of test cases grow only linealy by the number of conditions.  They only add up, but not multiply.
+- When there are multiple actions for each condition like IF A THEN DO 1 ELSE DO 2, then use IF-ELSE with different condition attached to each IF-ELSE branches.  The number of test cases grow only linearly by the number of conditions.  They only add up, but not multiply.
 - For negations, use a separate variable.  For example, if there is a and !a, then use a and na as if they are different variables, for example.
