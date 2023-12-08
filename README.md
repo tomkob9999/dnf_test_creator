@@ -63,15 +63,13 @@ file_path = '/kaggle/input/tomio5/dnf_regression.txt'
 
 DNF_Regression_solver.solve(file_path)
 
-The input file is a tab-delimited text file where the fields are conditions indicated by 1 or 0, and the last field indicates the result as a sample below.
+The input file is a tab-delimited text file where the fields are conditions indicated by 1 or 0, and the last field indicates the result as a sample below.  Also, a sample file dnf_regression.txt is in the repository.
 
 a	b	c	d	e	f	g	Res
+
 1	1	1	1	1	1	1	1
+
 1	1	1	1	1	1	0	1
+
 1	1	1	1	1	0	1	1
-1	1	1	1	1	0	0	1
-1	1	1	1	0	1	1	1
-1	1	1	1	0	1	0	1
-1	1	1	1	0	0	1	1
-1	1	1	1	0	0	0	1
 
