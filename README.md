@@ -13,7 +13,7 @@ Some Highlights
   - change of operators, like a & b & c, actually -> a & b | c, by mistake
   - omission of variables, like a & b & c, actually -> a & b | c, by mistake (mistaken additional variables cannot capture, but Cartesian product cases cannot cover them, so irrelavant)
   - replace with negation, like a & b & c, actually -> a & b * !c, by mistake
-except for very unlikely patterns like this one, but it is negligiable because chance of such occurence seems to be much lower than defects that cannot be detected by Cartesian product test cases, like use of some variables that should not be used in the condition.
+- Except for very unlikely erroneous patterns like this one, but it is negligiable because chance of such occurence seems to be much lower than defects that cannot be detected by Cartesian product test cases, like use of some variables that should not be used in the condition.
   - additional clause connected by OR that contains multiple negations, like a & b & c, actually -> a & b & b | a & !b & !c, by mistake
  
 The high level algorithm follows as follows.
