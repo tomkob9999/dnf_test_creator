@@ -49,3 +49,9 @@ You can copy the Pythothon script on your favorite Jupyter-like notebook, or run
 
 inp = "(a*b)+(a*b*c)"
 DNF_Test_Creater.solve(inp)
+
+
+
+# DNF Regression Solver
+
+This one does the exact opposite.  It finds the bool expression from the input data like Linear Regression logic.  It does not use either linear regression or decision tree logic.  Instead, it looks for DNF by matching the true and false identitity records used in DNF Test Creator.
