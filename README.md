@@ -56,8 +56,9 @@ DNF_Test_Creater.solve(inp)
 
 This one does the exact opposite.  It finds the bool expression from the input data like Linear Regression logic.  It does not use either linear regression or decision tree logic.  Instead, it looks for DNF by matching the true and false identitity records used in DNF Test Creator.
 
-HOW TO USE:
+HOW TO RUN:
 
 
 file_path = '/kaggle/input/tomio5/dnf_regression.txt'
+
 DNF_Regression_solver.solve(file_path)
