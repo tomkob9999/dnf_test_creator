@@ -104,7 +104,7 @@ class DNF_Regression_solver:
 
         print("")
         print("DNF with perfect match (1.0) - " + str(len(dnf_perf)))
-        print("--------")
+        print("--------------------------------")
         # Raw Pattern
 #         for s in sorted(dnf_perf):
 #             print(s)
@@ -115,7 +115,7 @@ class DNF_Regression_solver:
         #     print(', '.join(map(str, c)))
         print("")
         print("DNF with good match (over " + str(good_thresh) +") - " + str(len(dnf_good)))
-        print("--------")
+        print("--------------------------------")
         
         if len(dnf_good) > 0:
             print("(" + ") | (".join([" & ".join(a) for a in dnf_good]) + ")")
