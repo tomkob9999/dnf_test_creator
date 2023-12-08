@@ -1,4 +1,4 @@
-# dnf_test_creator
+# DNF Test Creator
 
 This tool automatically generates the test cases from a boolean expression (AND or OR without NOT) in the input string.  This uses the conditional probabiliy where the chance of some tests pass is almost certain with only negligiable margin if a very small number of certain set of test cases have already passed due to the property of DNF (connected by AND for each row).
 
