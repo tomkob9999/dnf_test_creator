@@ -1,7 +1,6 @@
-
 # Author: tomio kobayashi
-# Version: 1.1
-# Date: 2023/12/8
+# Version: 1.2
+# Date: 2023/12/09
 
 import itertools
 
@@ -17,8 +16,8 @@ class DNF_Regression_solver:
     #     file_path = '/kaggle/input/tomio5/dnf_regression.txt'
         # inp = read_tab_delimited_file_to_list(file_path)
 
-        good_thresh = 0.8
-        max_dnf_len = 8
+        good_thresh = 0.7 # TRESH_HOLD THAT THE FALSE MATCH SHOULD BE CONSIDERED AS GOOD
+        max_dnf_len = 20 
         
         with open(file_path, 'r') as f:
             inp = [line.strip().split('\t') for line in f]
@@ -31,6 +30,8 @@ class DNF_Regression_solver:
         numvars = len(inp[1])-1
         # print("numvars", numvars)
 
+        if numvars < max_dnf_len:
+            max_dnf_len = numvars
         dic = dict()
         true_list = []
         false_list = []
@@ -49,6 +50,8 @@ class DNF_Regression_solver:
 
         dnf_perf = list()
         dnf_good = list()
+        
+        raw_perf = list()
         for s in range(max_dnf_len):
             len_dnf = s + 1
             l = [ii for ii in range(numvars)]
@@ -58,6 +61,14 @@ class DNF_Regression_solver:
             true_test_pass = True
             for i in range(len(p_list)):
 
+                for p in raw_perf:
+                    s = sorted(set(p).intersection(set(list(p_list[i]))))
+#                     print("compare p", p)
+#                     print("compare list(p_list[i])", list(p_list[i]))
+                    if len(p) == len(s):
+#                         print("matched and break")
+                        break
+                
                 search_str = zeros
                 for jj in p_list[i]:
                     search_str = search_str[0:jj] + "1" + search_str[jj+1:len(search_str)]
@@ -68,17 +79,22 @@ class DNF_Regression_solver:
 
                 search_str2 = search_str
                 count_false = 0
+                found_true = False
                 for jj in p_list[i]:
                     search_str2 = search_str[0:jj] + "0" + search_str[jj+1:len(search_str)]
 
         #             print("search_str2", search_str2)
         #             print("dic[search_str2]", dic[search_str2])
                     if dic[search_str2] == "1":
+                        found_true = True
                         break
                     count_false += 1
         #         print("count_false", count_false)
+                if found_true:
+                    continue
                 if float(count_false)/float(len_dnf) == 1.0:
                     dnf_perf.append([inp[0][ii] for ii in p_list[i]])
+                    raw_perf.append([ii for ii in p_list[i]])
                 elif float(count_false)/float(len_dnf) >= good_thresh:
                     dnf_good.append([inp[0][ii] for ii in p_list[i]])
 
@@ -87,20 +103,22 @@ class DNF_Regression_solver:
 
 
         print("")
-        print("DNF with assurance - " + str(len(dnf_perf)))
+        print("DNF with perfect match (1.0) - " + str(len(dnf_perf)))
         print("--------")
         # Raw Pattern
 #         for s in sorted(dnf_perf):
 #             print(s)
-        print("(" + ") | (".join([" & ".join(a) for a in dnf_perf]) + ")")
+        if len(dnf_perf) > 0:
+            print("(" + ") | (".join([" & ".join(a) for a in dnf_perf]) + ")")
         # Processed Pattern
         # for c in sorted(winsets):
         #     print(', '.join(map(str, c)))
         print("")
-        print("DNF with high likelihood - " + str(len(dnf_good)))
+        print("DNF with good match (over " + str(good_thresh) +") - " + str(len(dnf_good)))
         print("--------")
         
-        print("(" + ") | (".join([" & ".join(a) for a in dnf_good]) + ")")
+        if len(dnf_good) > 0:
+            print("(" + ") | (".join([" & ".join(a) for a in dnf_good]) + ")")
 #         for s in sorted(dnf_good):
 #             print(s)
 
