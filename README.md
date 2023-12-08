@@ -24,7 +24,7 @@ The high level algorithm follows as follows.
 
 3. Create False cases by extracting each of selement from each condition connected by OR)
 
-- {true cases} -> Variable_Drop_One_At_a_Time({true cases}) == {talse Cases}
+- {true cases} -> Variable_Drop_One_At_a_Time({true cases}) == {false cases}
 
 
 TIPS:
