@@ -2,6 +2,10 @@
 
 This tool automatically generates the test cases from a boolean expression (AND or OR without NOT) in the input string.  This uses the conditional probabiliy-based approach by ommiting neglectably unlikely cases where the chance of some tests pass is almost certain with only negligiable margin if a very small number of certain set of test cases have already passed due to the property of simplified DNF (connected by AND for each row).
 
+The tool was developed mainly to use in black box testing where the logic in the specification is used as input.  Nonetheless, this can be used in the white box testing or unit tests by developers.
+
+The initial motive of creating this tool was to say Nay to managers with math difficulty who try to convince test teams to perform all-pattern tests, which use Cartesian product patterns in effect, which guarantees to be surrendered by the test teams because such all-pattern test case volume grows exponentially, and humans or automated test tools only prove to be useless against such sheer volume.  (Scientists and engineers have officially surrendered to deal with exponential growth items for ages, and tried to discover ways to work around NP and control the growth.)
+
 Some Highlights
 - The output size is O(n^2) (typically, O(n) < T(n) < O(2n)) to the number of variables n in the input, whereas the Cartesian product grows by O(2^n).  For example, with 11 input variables, the generated test cases are usually around 15, where as the Cartesian products grow to 2048.
 
