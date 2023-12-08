@@ -3,7 +3,7 @@
 This tool automatically generates the test cases from a boolean expression (AND or OR without NOT) in the input string.
 
 Some Highlights
-- The output size is O(n^2) to the number of variables (typically less than 2n) in the input whereas the Cartesian product grows by O(2^n).
+- The output size is O(n^2) (typically, O(n) < T(n) < O(2n)) to the number of variables n in the input, whereas the Cartesian product grows by O(2^n).  For example, with 11 input variables, the generated test cases are usually around 15, where as the Cartesian products grow to 2048.
 
 - The very small number of test cases actually cover all the cartesion product patterns including below implementation mistakes
   - change of operators, like a & b & c, actually -> a & b | c, by mistake
@@ -25,3 +25,10 @@ The high level algorithm follows as follows.
 3. Create False cases by extracting each of selement from each condition connected by OR)
 
 - True cases -> Variable_Drop_One_At_a_Time(True cases) == {False Cases}
+
+
+TIPS:
+
+- Expressions like IF-ELSE can always be converted to AND and OR as long as the expected action is one.
+- When there are multiple actions for each condition like IF A THEN DO 1 ELSE DO 2, then use IF-ELSE with different condition attached to each IF-ELSE branches.  The number of test cases grow only linealy by the number of conditions.  They only add up, but not multiply.
+- For negations, use a separate variable.  For example, if there is a and !a, then use a and na as if they are different variables, for example.
