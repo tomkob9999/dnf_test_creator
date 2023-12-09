@@ -48,6 +48,7 @@ HOW TO RUN:
 You can copy the Pythothon script on your favorite Jupyter-like notebook, or run the script from the command line. (I often use Kaggle due to laziness and convenience)
 
 inp = "(a*b)+(a*b*c)"
+
 DNF_Test_Creater.solve(inp)
 
 
