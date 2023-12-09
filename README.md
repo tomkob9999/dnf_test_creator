@@ -40,7 +40,7 @@ TIPS:
 - Expressions like IF-ELSE can always be converted to AND and OR as long as the expected action is one.
 - When there are multiple actions for each condition like IF A THEN DO 1 ELSE DO 2, then use IF-ELSE with different condition attached to each IF-ELSE branches.  The number of test cases grow only linearly by the number of conditions.  They only add up, but not multiply.
 - For negations, use a separate variable.  For example, if there is a and !a, then use a and na as if they are different variables, for example.
-- THE TOOL CAN BE USED TO TEST YOUR BOOLEAN EXPRESSIONS, NOT TO MENTION.
+- THE TOOL CAN BE USED TO TEST YOUR BOOLEAN EXPRESSIONS AS WELL, NOT TO MENTION.
 
 
 HOW TO RUN:
