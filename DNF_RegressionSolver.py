@@ -2,6 +2,7 @@
 # Version: 1.3.2
 # Date: 2023/12/09
 
+
 import itertools
 
 class DNF_Regression_solver:
@@ -133,6 +134,7 @@ class DNF_Regression_solver:
         print("Variables that were not picked up - " + str(len(not_picked)) + "/" + str(len(perm_vars)))
         print("--------------------------------")
         print(not_picked)
+
 
 
 
