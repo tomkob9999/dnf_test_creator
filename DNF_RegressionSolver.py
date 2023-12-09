@@ -125,3 +125,16 @@ class DNF_Regression_solver:
             print("(" + ") | (".join([" & ".join(a) for a in dnf_good]) + ")")
 #         for s in sorted(dnf_good):
 #             print(s)
+
+        perm_vars = [xx for x in dnf_perf for xx in x]
+        not_picked = [inp[0][ii] for ii in range(len(inp[0])-1) if inp[0][ii] not in perm_vars]
+
+        print("")
+        print("Variables that were not picked up " + str(len(not_picked)) + "/" + str(len(perm_vars)))
+        print("--------------------------------")
+        print(not_picked)
+
+
+
+file_path = '/kaggle/input/tomio9/dnf_regression.txt'
+DNF_Regression_solver.solve(file_path)
