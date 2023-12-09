@@ -54,16 +54,16 @@ DNF_Test_Creater.solve(inp)
 
 # DNF Regression Solver
 
-This one does the exact opposite.  It finds the bool expression from the input data like Linear Regression logic.  It does not use either linear regression or decision tree logic.  Instead, it looks for DNF by matching the true and false identitity records used in DNF Test Creator.  The runtime is O(n), ans much faster than DNF Test Creator as DNF conversion part is a known NP Complete.  This could process the input of 8192 records with 13 variables in a flash whereas DNF Test Creator took about 1 min to generate the test cases for the same boolean expressions used.
+This one does the exact opposite.  It finds the bool expression from the input data like Linear Regression finds coefficients of covectors.  It does not use either linear regression or decision tree logic, though.  Instead, it looks for DNF by matching the true and false identitity records, which is the essence used in DNF Test Creator as well.  The runtime is O(n), and much faster than DNF Test Creator as it involves DNF conversion, which is a known NP Complete (O(2^n)).  For example, this could process the input of 8192 records with 13 variables in a flash whereas DNF Test Creator took up to 1 min to generate the test cases for the same boolean expression used ("a | ((b | c) & d) | ((e | f) & g) | (((h | j)) & k & l) | (o & p)").
+
 
 HOW TO RUN:
-
 
 file_path = '/kaggle/input/tomio5/dnf_regression.txt'
 
 DNF_Regression_solver.solve(file_path)
 
-The input file is a tab-delimited text file where the fields are conditions indicated by 1 or 0, and the last field indicates the result as a sample below.  Also, a sample file dnf_regression.txt is in the repository.
+The input file is a tab-delimited text file where the fields are conditions indicated by 1 or 0, and the last field (or column) indicates the result as sampled below.  Also, a sample file dnf_regression.txt is in the repository.
 
 a	b	c	d	e	f	g	Res
 
