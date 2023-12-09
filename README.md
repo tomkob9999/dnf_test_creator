@@ -36,7 +36,7 @@ The high level algorithm follows as follows.
 TIPS:
 
 - Only & or * (as AND), | and + (as OR) can be used as bool operators.
-- The tab delimited text at the bottom can be used to be pasted on Excel to create test cases.  It saves quite an effort and copying mistakes than typing based on outputs.
+- The tab delimited text at the bottom of the output text can be used to be pasted on Excel to create test cases.  It saves quite an effort and copying mistakes than typing based on outputs.
 - Expressions like IF-ELSE can always be converted to AND and OR as long as the expected action is one.
 - When there are multiple actions for each condition like IF A THEN DO 1 ELSE DO 2, then use IF-ELSE with different condition attached to each IF-ELSE branches.  The number of test cases grow only linearly by the number of conditions.  They only add up, but not multiply.
 - For negations, use a separate variable.  For example, if there is a and !a, then use a and na as if they are different variables, for example.
