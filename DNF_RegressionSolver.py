@@ -1,12 +1,12 @@
 # Author: tomio kobayashi
-# Version: 1.2
+# Version: 1.3
 # Date: 2023/12/09
 
 import itertools
 
 class DNF_Regression_solver:
 
-    def solve(file_path):
+    def solve(file_path, good_thresh=0.7, allow_unmatch_for_good=False, max_dnf_len = 20):
         # def read_tab_delimited_file_to_list(file_path):
         #     with open(file_path, 'r') as f:
         #         return [line.strip().split('\t') for line in f]
@@ -16,8 +16,7 @@ class DNF_Regression_solver:
     #     file_path = '/kaggle/input/tomio5/dnf_regression.txt'
         # inp = read_tab_delimited_file_to_list(file_path)
 
-        good_thresh = 0.7 # TRESH_HOLD THAT THE FALSE MATCH SHOULD BE CONSIDERED AS GOOD
-        max_dnf_len = 20 
+#         good_thresh = 0.7 # TRESH_HOLD THAT THE FALSE MATCH SHOULD BE CONSIDERED AS GOOD
         
         with open(file_path, 'r') as f:
             inp = [line.strip().split('\t') for line in f]
@@ -61,14 +60,18 @@ class DNF_Regression_solver:
             true_test_pass = True
             for i in range(len(p_list)):
 
+                match_and_break = False
                 for p in raw_perf:
                     s = sorted(set(p).intersection(set(list(p_list[i]))))
 #                     print("compare p", p)
 #                     print("compare list(p_list[i])", list(p_list[i]))
+#                     print("compare s", s)
                     if len(p) == len(s):
 #                         print("matched and break")
+                        match_and_break = True
                         break
-                
+                if match_and_break:
+                    continue
                 search_str = zeros
                 for jj in p_list[i]:
                     search_str = search_str[0:jj] + "1" + search_str[jj+1:len(search_str)]
@@ -90,8 +93,9 @@ class DNF_Regression_solver:
                         break
                     count_false += 1
         #         print("count_false", count_false)
-                if found_true:
-                    continue
+                if not allow_unmatch_for_good:
+                    if found_true :
+                        continue
                 if float(count_false)/float(len_dnf) == 1.0:
                     dnf_perf.append([inp[0][ii] for ii in p_list[i]])
                     raw_perf.append([ii for ii in p_list[i]])
@@ -121,6 +125,3 @@ class DNF_Regression_solver:
             print("(" + ") | (".join([" & ".join(a) for a in dnf_good]) + ")")
 #         for s in sorted(dnf_good):
 #             print(s)
-
-# file_path = '/kaggle/input/tomio5/dnf_regression.txt'
-# DNF_Regression_solver.solve(file_path)
