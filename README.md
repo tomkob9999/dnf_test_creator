@@ -1,6 +1,6 @@
 # DNF Test Creator
 
-This tool automatically generates the test cases from a boolean expression (AND or OR without NOT) in the input string.  This uses the conditional probabiliy-based approach by ommiting neglectably unlikely cases where the chance of some tests pass is almost certain with only negligiable margin if a very small number of certain set of test cases have already passed due to the property of simplified DNF (connected by AND for each row).
+This tool automatically generates the test cases from a boolean expression (AND or OR without NOT) in the input string.  This uses the property of the boolean expressions guaranteed to be met if their superset(false cases) or subset (true cases) conditions have been already met, especially in DNF format where group of AND conditions are joined by OR, ala "(a and b) or (b and c)".
 
 The tool was developed mainly to use in black box testing where the logic in the specification is used as input.  Nonetheless, this can be used in the white box testing or unit tests by developers.
 
