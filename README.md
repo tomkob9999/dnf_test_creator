@@ -54,7 +54,7 @@ DNF_Test_Creater.solve(inp)
 
 # DNF Regression Solver
 
-This one does the exact opposite.  It finds the bool expression from the input data like Linear Regression logic.  It does not use either linear regression or decision tree logic.  Instead, it looks for DNF by matching the true and false identitity records used in DNF Test Creator.  The runtime is O(n), ans much faster than DNF Test Creator as DNF conversion part is a known NP Complete.  This seems to finish 10000 records in a flash.
+This one does the exact opposite.  It finds the bool expression from the input data like Linear Regression logic.  It does not use either linear regression or decision tree logic.  Instead, it looks for DNF by matching the true and false identitity records used in DNF Test Creator.  The runtime is O(n), ans much faster than DNF Test Creator as DNF conversion part is a known NP Complete.  This could process the input of 8192 records with 13 variables in a flash whereas DNF Test Creator took about 1 min to generate the test cases for the same boolean expressions used.
 
 HOW TO RUN:
 
