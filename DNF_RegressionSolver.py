@@ -1,12 +1,12 @@
 # Author: tomio kobayashi
-# Version: 1.3
+# Version: 1.3.2
 # Date: 2023/12/09
 
 import itertools
 
 class DNF_Regression_solver:
 
-    def solve(file_path, good_thresh=0.7, allow_unmatch_for_good=False, max_dnf_len = 20):
+    def solve(file_path, good_thresh=0.7, allow_unmatch_for_good=False, max_dnf_len = 15):
         # def read_tab_delimited_file_to_list(file_path):
         #     with open(file_path, 'r') as f:
         #         return [line.strip().split('\t') for line in f]
@@ -29,8 +29,8 @@ class DNF_Regression_solver:
         numvars = len(inp[1])-1
         # print("numvars", numvars)
 
-        if numvars < max_dnf_len:
-            max_dnf_len = numvars
+        if numvars - 1 < max_dnf_len:
+            max_dnf_len = numvars - 1
         dic = dict()
         true_list = []
         false_list = []
@@ -130,7 +130,7 @@ class DNF_Regression_solver:
         not_picked = [inp[0][ii] for ii in range(len(inp[0])-1) if inp[0][ii] not in perm_vars]
 
         print("")
-        print("Variables that were not picked up " + str(len(not_picked)) + "/" + str(len(perm_vars)))
+        print("Variables that were not picked up - " + str(len(not_picked)) + "/" + str(len(perm_vars)))
         print("--------------------------------")
         print(not_picked)
 
