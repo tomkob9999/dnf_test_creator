@@ -1,5 +1,5 @@
 # Author: tomio kobayashi
-# Version: 1.4
+# Version: 1.5
 # Date: 2023/12/10
 
 import itertools
@@ -53,8 +53,9 @@ class DNF_Regression_solver:
 
         dnf_perf = list()
         dnf_good = list()
-        
         raw_perf = list()
+        
+        failed_false_tests = 0
         for s in range(max_dnf_len):
             len_dnf = s + 1
             l = [ii for ii in range(numvars)]
@@ -77,24 +78,21 @@ class DNF_Regression_solver:
                 rdic_res = rdic[search_str]
                 if len(rdic_res) == 0:
                     continue
-                if len(rdic_res) == 0 or len([f for f in rdic_res if f == "0"]) > 0:
+                if len([f for f in rdic_res if f == "0"]) > 0:
                     continue
                       
                 search_str2 = search_str
                 count_false = 0
                 found_true = False
+
+                search_str = search_str.replace(".", "0")
                 for jj in p_list[i]:
                     search_str2 = search_str[0:jj] + "0" + search_str[jj+1:len(search_str)]
-
-                    rdic_res = rdic[search_str2]
-                    if len(rdic_res) == 0:
+                    if search_str2 not in dic:
                         continue
-                    if len(rdic_res) == 0 or len([f for f in rdic_res if f == "0"]) == 0:
+                    if dic[search_str2] == "1":
                         found_true = True
                         break
-                        
-            
-                        
                     count_false += 1
                 if not allow_unmatch_for_good:
                     if found_true :
@@ -106,21 +104,28 @@ class DNF_Regression_solver:
                     dnf_good.append([inp[0][ii] for ii in p_list[i]])
 
         print("")
-        dnf_perf.extend(dnf_good)
-        print("DNF with high confidence (over " + str(good_thresh) +") - " + str(len(dnf_perf)))
+        print("DNF with perfect match (1.0) - " + str(len(dnf_perf)))
         print("--------------------------------")
 
         if len(dnf_perf) > 0:
             print("(" + ") | (".join([" & ".join(a) for a in dnf_perf]) + ")")
+        # Processed Pattern
+        # for c in sorted(winsets):
+        #     print(', '.join(map(str, c)))
+        print("")
+        print("DNF with good match (over " + str(good_thresh) +") - " + str(len(dnf_good)))
+        print("--------------------------------")
+        
+        if len(dnf_good) > 0:
+            print("(" + ") | (".join([" & ".join(a) for a in dnf_good]) + ")")
 
         perm_vars = [xx for x in dnf_perf for xx in x]
         not_picked = [inp[0][ii] for ii in range(len(inp[0])-1) if inp[0][ii] not in perm_vars]
 
         print("")
-        print("Unsolved variables - " + str(len(not_picked)) + "/" + str(numvars))
+        print("Unsolved variables - " + str(len(not_picked)) + "/" + str(len(perm_vars)))
         print("--------------------------------")
         print(not_picked)
-
 
 
 file_path = '/kaggle/input/tomio9/dnf_regression.txt'
