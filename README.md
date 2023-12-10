@@ -4,7 +4,7 @@ This tool automatically generates the test cases from a boolean expression (AND 
 
 The tool was developed mainly to use in black box testing where the logic in the specification is used as input.  Nonetheless, this can be used in the white box testing or unit tests by developers.
 
-The initial motive of creating this tool was my answer to managers with math difficulty who try to convince the test team to perform all-pattern tests, which use Cartesian product patterns in effect, which will be guaranteed to be surrendered by the test team because such all-pattern test case volume grows exponentially, and humans or automated test tools only prove to be useless against such sheer volume.  (Scientists and engineers have officially surrendered to deal with exponential growth items for ages, and instead tried to discover ways to work around NP or control the growth.)
+The initial motive of creating this tool was my answer to those who expect testers to perform all-pattern tests, which use Cartesian product patterns in effect, and such an approach will be guaranteed to be surrendered by the testers because such all-pattern test case volume grows exponentially, and humans or regular automated test machines only prove to be useless against such sheer volume.  (Scientists and engineers have officially surrendered to deal with exponential growth items for ages, and instead tried to discover ways to work around NP or control the growth.)
 
 Some Highlights
 - The output size is O(n) to the number of variables n in the input, whereas the Cartesian product grows by O(2^n).  For example, with 11 input variables, the tool generates typically about 15, whereas the Cartesian products grow to 2048.
