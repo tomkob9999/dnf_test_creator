@@ -1,5 +1,5 @@
 # Author: tomio kobayashi
-# Version: 1.5
+# Version: 1.5.1
 # Date: 2023/12/10
 
 import itertools
@@ -18,7 +18,7 @@ class rdict(dict):
     
 class DNF_Regression_solver:
 
-    def solve(file_path, good_thresh=0.7, allow_unmatch_for_good=False, max_dnf_len = 6):
+    def solve(file_path, good_thresh=0.0, allow_unmatch_for_good=False, max_dnf_len = 6):
 
         # Example usage:
         # file_path = '/kaggle/input/dnf-regression/dnf_regression.txt'
@@ -81,9 +81,25 @@ class DNF_Regression_solver:
                 if len([f for f in rdic_res if f == "0"]) > 0:
                     continue
                       
+#                 print("True test passed", p_list[i])
                 search_str2 = search_str
                 count_false = 0
                 found_true = False
+#                 for jj in p_list[i]:
+#                     search_str2 = search_str[0:jj] + "0" + search_str[jj+1:len(search_str)]
+
+#                     rdic_res = rdic[search_str2]
+# #                     print("rdic_res", rdic_res)
+#                     if len(rdic_res) == 0:
+#                         continue
+#                     if len([f for f in rdic_res if f == "1"]) > 0:
+                        
+#                         print("False Test Failed")
+#                         print("search_str2", search_str2)
+#                         print("rdic_res", rdic_res)
+# #                         failed_false_tests[p_list[i]] = [f for f in rdic_res if f == "1"]
+#                         found_true = True
+#                         break
 
                 search_str = search_str.replace(".", "0")
                 for jj in p_list[i]:
@@ -103,21 +119,43 @@ class DNF_Regression_solver:
                 elif float(count_false)/float(len_dnf) >= good_thresh:
                     dnf_good.append([inp[0][ii] for ii in p_list[i]])
 
-        print("")
-        print("DNF with perfect match (1.0) - " + str(len(dnf_perf)))
-        print("--------------------------------")
+#         print("")
+#         dnf_perf.extend(dnf_good)
+#         print("DNF with high confidence (over " + str(good_thresh) +") - " + str(len(dnf_perf)))
+#         print("--------------------------------")
 
+#         if len(dnf_perf) > 0:
+#             print("(" + ") | (".join([" & ".join(a) for a in dnf_perf]) + ")")
+
+#         perm_vars = [xx for x in dnf_perf for xx in x]
+#         not_picked = [inp[0][ii] for ii in range(len(inp[0])-1) if inp[0][ii] not in perm_vars]
+
+#         print("")
+#         print("Unsolved variables - " + str(len(not_picked)) + "/" + str(numvars))
+#         print("--------------------------------")
+#         print(not_picked)
+
+
+
+        print("")
+        print("DNF with complete match (1.0) - " + str(len(dnf_perf)))
+        print("--------------------------------")
+        # Raw Pattern
+#         for s in sorted(dnf_perf):
+#             print(s)
         if len(dnf_perf) > 0:
             print("(" + ") | (".join([" & ".join(a) for a in dnf_perf]) + ")")
         # Processed Pattern
         # for c in sorted(winsets):
         #     print(', '.join(map(str, c)))
         print("")
-        print("DNF with good match (over " + str(good_thresh) +") - " + str(len(dnf_good)))
+        print("DNF with complete true match but false match rate of " + str(good_thresh) +" - " + str(len(dnf_good)))
         print("--------------------------------")
         
         if len(dnf_good) > 0:
             print("(" + ") | (".join([" & ".join(a) for a in dnf_good]) + ")")
+#         for s in sorted(dnf_good):
+#             print(s)
 
         perm_vars = [xx for x in dnf_perf for xx in x]
         not_picked = [inp[0][ii] for ii in range(len(inp[0])-1) if inp[0][ii] not in perm_vars]
