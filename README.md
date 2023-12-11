@@ -13,7 +13,7 @@ Some Highlights
   - change of operators, like a & b & c, actually -> a & b | c, by mistake
   - omission of variables, like a & b & c, actually -> a & b | c, by mistake (mistaken additional variables cannot capture, but Cartesian product cases cannot cover them, so irrelavant)
   - replace with negation, like a & b & c, actually -> a & b * !c, by mistake
-- ,except for rare erroneous patterns using negative conditions, like a & b & c, actually -> a & b & c & !d by mistake
+- except for very rare erroneous patterns like adding certain negative conditions that cause true to false, like a & b & c, actually -> a & b & c & !d by mistake
     
 - Converting a bool expression into DNF is a known NP problem, so the run time of generation grows exponentially to the number of variables.  The Python standard Simpy library to_dnf() got stuck when the variables are above 10 in my enviroment.  I use my own algorithm instead, and it takes about 1 min for 13 varaiables.  It is much faster than Simpy, but sill it becomes quite heavy at 13 or 14 variables (which can be a pain but nothing compared to the test effort which can takes days, weeks or months for large, yet off-the-point, set of test cases)  
  
