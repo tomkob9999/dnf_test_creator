@@ -1,21 +1,9 @@
 # Name: DNF_Regression_solver
 # Author: tomio kobayashi
-# Version: 2.1
+# Version: 2.1.1
 # Date: 2023/12/11
 
 import itertools
-
-# import re
-# class rdict(dict):
-#     def __getitem__(self, key):
-#         p = re.compile(key)
-#         r = [ v for k,v in self.items() if p.search(k) ]
-#         return r if len(r) > 0 else []
-#     def get(self, k, d=None):
-#         p = re.compile(k)
-#         r = [(k, v) for k, v in self.items() if p.search(k)]
-#         return r if len(r) > 1 else []
-    
     
 class DNF_Regression_solver:
 #     This version has no good matches
@@ -94,25 +82,21 @@ class DNF_Regression_solver:
             for jj in raw_perf[i]:
                 jj2 = 1 << (numvars - jj - 1)
                 jj3 = b ^ jj2
-                rdic_res = [(k, v) for k,v in dic.items() if k & jj2 == jj2 and v == "1"]
+                rdic_res = [(k, v) for k,v in dic.items() if k & jj3 == jj3 and v == "1"]
+                rdic_resxx = [(bin(k), v) for k,v in dic.items() if k & jj3 == jj3 and v == "1"]
                 if len(rdic_res) == 0:
                     continue
                 is_any_match = False
                 for f in rdic_res:
-                    if f[1] == "0":
-                        continue
                     for kk in raw_perf2:
-                        is_match = True
-                        if kk != kk & f[0]:
-                            is_match = False
-                            break
-                        if is_match:
+                        if kk == kk & f[0]:
                             is_any_match = True
                             break
                     if is_any_match:
                         break
                 if not is_any_match:
                     fake_raw.append(raw_perf[i])
+                    break
         for f in fake_raw:
             for iii in range(len(raw_perf)):
                 if f == raw_perf[iii]:
