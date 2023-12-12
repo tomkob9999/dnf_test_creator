@@ -51,7 +51,7 @@ inp = "(a*b)+(a*b*c)"
 DNF_Test_Creater.solve(inp)
 
 NOTE:
-  The latest version added negation levels for both true and false cases.  It is known that the basic test cases can be beat with using negations.  For example, for (a, b, c), "1 1 0" == False cannot lead to "1 0 0" == False if (a, b, !c) condition is used either by mistake or maliciously.  It comes the notion of nth true/false orders.  Order indicates how much apart (number of variables difference) from the basic set, which are true cases and nagative cases made up of flipping one of the variables in each true case.  The parameters allow to generate the test cases based on the number of orders expected.  The test cases will increase exponentially to the number of orders.
+  The latest version added negation levels for both true and false cases.  It is known that the basic test cases can be beat with using negations.  For example, for (a, b, c), "1 1 0" == False cannot lead to "1 0 0" == False if (a, b, !c) condition is used either by mistake, or maliciously.  It comes the notion of nth true/false orders.  Order indicates how much apart (number of variables difference) from the basic set, which are the true cases and the false cases made by flipping one of the variables in each true case.  The parameters allow to generate the test cases based on the number of orders expected.  But the number of such test cases will increase exponentially to the number of orders.
 
 
  -----------------------
