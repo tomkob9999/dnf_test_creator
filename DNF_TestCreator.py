@@ -1,7 +1,7 @@
 # author: tomio kobayashi
-# version 1.3.1
+# version 1.3.2
 # published date: 2023/12/12
- 
+
 import re
 import copy
 
@@ -50,7 +50,7 @@ class DNF_Test_Creater:
                 exec(__tokens___[__jjjj___] + " = " + str(__ccc___[__jjjj___]))
             return eval(__inp___ + " >= 1")
         
-    def solve(inp, evil_true_neg_lvl=0, evil_false_neg_lvl=1):
+    def solve(inp, evil_neg_lvl=0):
 
         tokens = re.split('[*+]', inp.replace("&", "*").replace("|", "+").replace(" ","").replace(')', '').replace('(', ''))
         
@@ -107,11 +107,11 @@ class DNF_Test_Creater:
         goodsets = list()
         usedtokens = set()
 
-        evil_true_negator = [list()] * (evil_true_neg_lvl+1)
-        evil_false_negator = [list()] * (evil_false_neg_lvl+1)
+        evil_true_negator = [list()] * (evil_neg_lvl+1)
+        evil_false_negator = [list()] * (evil_neg_lvl+1+1)
 
         evil_true_negator[0] = copy.deepcopy(winsets)
-        for xx in range(evil_true_neg_lvl):
+        for xx in range(evil_neg_lvl):
 
             evil_true_negator[xx+1] = list()
             for i in range(len(evil_true_negator[xx])):
@@ -121,17 +121,33 @@ class DNF_Test_Creater:
                     if c not in winc:
                         tryc = copy.deepcopy(evil_true_negator[xx][i])
                         tryc.append(c)
-                        evil_true_negator[xx+1].append(tryc)
+                        evil_true_negator[xx+1].append(sorted(tryc))
                         continue
                         
             new_evil = []
             sorted_evil = sorted(evil_true_negator[xx+1])
-                                     
-            for s in range(1, len(sorted_evil), 1):
-                if sorted_evil[s] != sorted_evil[s-1]:
-                    new_evil.append(sorted_evil[s])
+            
+            if len(sorted_evil) > 0:
+                new_evil.append(sorted_evil[0])
+                for s in range(1, len(sorted_evil), 1):
+                    if sorted_evil[s] != sorted_evil[s-1]:
+                        new_evil.append(sorted_evil[s])
             evil_true_negator[xx+1] = new_evil
-                    
+        
+        all_evil_true_negator = []
+        for i in range(1, len(evil_true_negator), 1):
+            for k in evil_true_negator[i]:
+                all_evil_true_negator.append(k)
+        all_evil_true_negator.sort()
+        
+        all_evil_true_negator2 = []
+        if len(all_evil_true_negator) > 0:
+            all_evil_true_negator2.append(all_evil_true_negator[0])
+            for i in range(1, len(all_evil_true_negator), 1):
+                if all_evil_true_negator[i] != all_evil_true_negator[i-1]:
+                    all_evil_true_negator2.append(all_evil_true_negator[i])
+        all_evil_true_negator = all_evil_true_negator2
+
                 
         for i in range(len(winsets)):
             for j in range(len(winsets[i])):
@@ -158,7 +174,7 @@ class DNF_Test_Creater:
 
 
         evil_false_negator[0] = copy.deepcopy(losesets)
-        for xx in range(evil_false_neg_lvl-1):
+        for xx in range(evil_neg_lvl):
             evil_false_negator[xx+1] = list()
             for i in range(len(evil_false_negator[xx])):
                 winc = evil_false_negator[xx][i]
@@ -171,12 +187,26 @@ class DNF_Test_Creater:
                         
             new_evil = []
             sorted_evil = sorted(evil_false_negator[xx+1])
-                                     
-            for s in range(1, len(sorted_evil), 1):
-                if sorted_evil[s] != sorted_evil[s-1]:
-                    new_evil.append(sorted_evil[s])
+            if len(sorted_evil) > 0:
+                new_evil.append(sorted_evil[0])
+                for s in range(1, len(sorted_evil), 1):
+                    if sorted_evil[s] != sorted_evil[s-1]:
+                        new_evil.append(sorted_evil[s])
             evil_false_negator[xx+1] = new_evil
             
+        all_evil_false_negator = []
+        for i in range(1, len(evil_false_negator), 1):
+            for k in evil_false_negator[i]:
+                all_evil_false_negator.append(k)
+        all_evil_false_negator.sort()
+        all_evil_false_negator2 = []
+        if len(all_evil_false_negator) > 0:
+            all_evil_false_negator2.append(all_evil_false_negator[0])
+            for i in range(1, len(all_evil_false_negator), 1):
+                if all_evil_false_negator[i] != all_evil_false_negator[i-1]:
+                    all_evil_false_negator2.append(all_evil_false_negator[i])
+        all_evil_false_negator = all_evil_false_negator2
+
         print("")
         print("Number of Cartesian Product-Based Test Cases - " + str(len(clist)))
         print(" including true cases - " + str(len([r for r in res if r])))
@@ -194,21 +224,20 @@ class DNF_Test_Creater:
         
         for s in sorted(losesets):
             print(s)
-            
+
+        cnt1 = len(all_evil_true_negator)
+        cnt2 = len(all_evil_false_negator)
+
         print("")
-        print("Evil True Negators (level=" + str(evil_true_neg_lvl) + ")")
+        print("Optional Malignant True Cases (level=" + str(evil_neg_lvl) + ") - " + str(cnt1))
         print("--------")
-        for i in range(1, evil_true_neg_lvl+1, 1):
-            for s in sorted(evil_true_negator[i]):
-                print(s)
-            
+        for s in all_evil_true_negator:
+            print(s)
         print("")
-        print("Evil False Negators (level=" + str(evil_false_neg_lvl) + ")")
+        print("Optional Malignant False Errors (level=" + str(evil_neg_lvl) + ") - " + str(cnt2))
         print("--------")
-        for i in range(1, evil_false_neg_lvl+1, 1):
-            for s in sorted(evil_false_negator[i]):
-                print(s)
-                
+        for s in all_evil_false_negator:
+            print(s)
         print("")
 
         print("Tab Delimited Results - " + str(len(losesets)))
@@ -239,38 +268,33 @@ class DNF_Test_Creater:
             ss += "FALSE"
             print(ss)
 
-        cnt1 = sum([i for i in range(1, evil_true_neg_lvl+1, 1) for k in evil_true_negator[i]])
-        cnt2 = sum([i for i in range(1, evil_false_neg_lvl+1, 1) for k in evil_false_negator[i]])
-
         print("")
-        print("Optionally to hunt negation bugs - " + str(cnt1+cnt2))
-        print("--------")
-        for i in range(1, evil_true_neg_lvl+1, 1):
+        print("Normally not needed, but good to do after all the basic sets are tested.")
+        print("Also, they help to find malignant errors - " + str(cnt1+cnt2))
+        print("------------------------")
             
-            for k in evil_true_negator[i]:
-                ss = ""
-                for t in tokens:
-                    if t in k:
-                        ss += str("1\t")
-                    else:
-                        ss += str("0\t")
-                ss += "TRUE"
-                print(ss)
-        for i in range(1, evil_false_neg_lvl+1, 1):
-            
-            for k in evil_false_negator[i]:
-                ss = ""
-                for t in tokens:
-                    if t in k:
-                        ss += str("1\t")
-                    else:
-                        ss += str("0\t")
-                ss += "FALSE"
-                print(ss)
+        for k in all_evil_true_negator:
+            ss = ""
+            for t in tokens:
+                if t in k:
+                    ss += str("1\t")
+                else:
+                    ss += str("0\t")
+            ss += "TRUE"
+            print(ss)
 
+        for k in all_evil_false_negator:
+            ss = ""
+            for t in tokens:
+                if t in k:
+                    ss += str("1\t")
+                else:
+                    ss += str("0\t")
+            ss += "FALSE"
+            print(ss)
 
 
 
 inp = "(a & (b | ((g | k) & i)) & c) | (d & (e | (h & j) & f))"
-# DNF_Test_Creater.solve(inp, evil_true_neg_lvl=1, evil_false_neg_lvl=2)
+# DNF_Test_Creater.solve(inp, evil_neg_lvl=1)
 DNF_Test_Creater.solve(inp)
