@@ -1,7 +1,6 @@
-# Clean Class Version (bug fixed, debug codes removed) 1.3
 # author: tomio kobayashi
-# version 1.3
-# published date: 2023/12/8
+# version 1.3.1
+# published date: 2023/12/12
 
 import re
 import copy
@@ -51,7 +50,7 @@ class DNF_Test_Creater:
                 exec(__tokens___[__jjjj___] + " = " + str(__ccc___[__jjjj___]))
             return eval(__inp___ + " >= 1")
         
-    def solve(inp):
+    def solve(inp, evil_true_neg_lvl=0, evil_false_neg_lvl=1):
 
         tokens = re.split('[*+]', inp.replace("&", "*").replace("|", "+").replace(" ","").replace(')', '').replace('(', ''))
         
@@ -70,7 +69,6 @@ class DNF_Test_Creater:
         winsets = []
         losesets = []
 
-#         inp = inp.replace("*"," and ").replace("+", " or ")
         for i in range(len(clist)):
 
             res[i] = DNF_Test_Creater.myeval(clist[i], tokens, inp)
@@ -85,10 +83,6 @@ class DNF_Test_Creater:
             else:
                 losesets.append(sorted(wins))
 
-#         for i in range(len(winsets)):
-#             winsets[i].append([i])
-                
-        
         staying = True
         while staying:
             staying = False
@@ -112,7 +106,33 @@ class DNF_Test_Creater:
         losesets = list()
         goodsets = list()
         usedtokens = set()
-        
+
+        evil_true_negator = [list()] * (evil_true_neg_lvl+1)
+        evil_false_negator = [list()] * (evil_false_neg_lvl+1)
+
+        evil_true_negator[0] = copy.deepcopy(winsets)
+        for xx in range(evil_true_neg_lvl):
+
+            evil_true_negator[xx+1] = list()
+            for i in range(len(evil_true_negator[xx])):
+                winc = set(evil_true_negator[xx][i])
+
+                for c in sorted(tokens):
+                    if c not in winc:
+                        tryc = copy.deepcopy(evil_true_negator[xx][i])
+                        tryc.append(c)
+                        evil_true_negator[xx+1].append(tryc)
+                        continue
+                        
+            new_evil = []
+            sorted_evil = sorted(evil_true_negator[xx+1])
+                                     
+            for s in range(1, len(sorted_evil), 1):
+                if sorted_evil[s] != sorted_evil[s-1]:
+                    new_evil.append(sorted_evil[s])
+            evil_true_negator[xx+1] = new_evil
+                    
+                
         for i in range(len(winsets)):
             for j in range(len(winsets[i])):
 
@@ -136,6 +156,27 @@ class DNF_Test_Creater:
                     if NotExists:
                         goodsets.append(ww)
 
+
+        evil_false_negator[0] = copy.deepcopy(losesets)
+        for xx in range(evil_false_neg_lvl-1):
+            evil_false_negator[xx+1] = list()
+            for i in range(len(evil_false_negator[xx])):
+                winc = evil_false_negator[xx][i]
+
+                for c in range(len(winc)):
+                    tryc = copy.deepcopy(winc)
+                    tryc.pop(c)
+                    evil_false_negator[xx+1].append(tryc)
+                    continue
+                        
+            new_evil = []
+            sorted_evil = sorted(evil_false_negator[xx+1])
+                                     
+            for s in range(1, len(sorted_evil), 1):
+                if sorted_evil[s] != sorted_evil[s-1]:
+                    new_evil.append(sorted_evil[s])
+            evil_false_negator[xx+1] = new_evil
+            
         print("")
         print("Number of Cartesian Product-Based Test Cases - " + str(len(clist)))
         print(" including true cases - " + str(len([r for r in res if r])))
@@ -147,34 +188,28 @@ class DNF_Test_Creater:
         # Raw Pattern
         for s in sorted(winsets):
             print(s)
-        # Processed Pattern
-        # for c in sorted(winsets):
-        #     print(', '.join(map(str, c)))
         print("")
-        print("Suggested False Test Cases - " + str(len(losesets)))
+        print("Suggested False Test Cases - " + str(len(losesets)) )
         print("--------")
         
         for s in sorted(losesets):
             print(s)
-        # Decided to merge with goodsets as they seem just as important
-#         for s in sorted(goodsets):
-#             print(s)
-        # for c in sorted(losesets):
-        #     print(', '.join(map(str, c)))
-
-#         # This part is optional because of unlikely false negative cases as long as non-optional cases are tested
-#         print("")
-#         print("Suggested False Cases (optionally needed when some variables appear multiple times) - " + str(len(goodsets)))
-#         print("--------")
-
-#         for s in sorted(goodsets):
-#             print(s)
-#         # for c in sorted(goodsets):
-#         #     print(', '.join(map(str, c)))
-
+            
         print("")
-#         print(len([r for r in res if r]))
-
+        print("Evil True Negators (level=" + str(evil_true_neg_lvl) + ")")
+        print("--------")
+        for i in range(1, evil_true_neg_lvl+1, 1):
+            for s in sorted(evil_true_negator[i]):
+                print(s)
+            
+        print("")
+        print("Evil False Negators (level=" + str(evil_false_neg_lvl) + ")")
+        print("--------")
+        for i in range(1, evil_false_neg_lvl+1, 1):
+            for s in sorted(evil_false_negator[i]):
+                print(s)
+                
+        print("")
 
         print("Tab Delimited Results - " + str(len(losesets)))
         print("--------")
@@ -203,3 +238,39 @@ class DNF_Test_Creater:
                     ss += str("0\t")
             ss += "FALSE"
             print(ss)
+
+        cnt1 = sum([i for i in range(1, evil_true_neg_lvl+1, 1) for k in evil_true_negator[i]])
+        cnt2 = sum([i for i in range(1, evil_false_neg_lvl+1, 1) for k in evil_false_negator[i]])
+
+        print("")
+        print("Optionally to hunt negation bugs - " + str(cnt1+cnt2))
+        print("--------")
+        for i in range(1, evil_true_neg_lvl+1, 1):
+            
+            for k in evil_true_negator[i]:
+                ss = ""
+                for t in tokens:
+                    if t in k:
+                        ss += str("1\t")
+                    else:
+                        ss += str("0\t")
+                ss += "TRUE"
+                print(ss)
+        for i in range(1, evil_false_neg_lvl+1, 1):
+            
+            for k in evil_false_negator[i]:
+                ss = ""
+                for t in tokens:
+                    if t in k:
+                        ss += str("1\t")
+                    else:
+                        ss += str("0\t")
+                ss += "FALSE"
+                print(ss)
+
+
+
+
+inp = "(a & (b | ((g | k) & i)) & c) | (d & (e | (h & j) & f))"
+# DNF_Test_Creater.solve(inp, evil_true_neg_lvl=1, evil_false_neg_lvl=2)
+DNF_Test_Creater.solve(inp)
