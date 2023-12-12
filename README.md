@@ -39,7 +39,7 @@ TIPS:
 - Expressions like IF-ELSE can always be converted to AND and OR as long as the expected action is one.
 - When there are multiple actions for each condition like IF A THEN DO 1 ELSE DO 2, then use IF-ELSE with different condition attached to each IF-ELSE branches.  The number of test cases grow only linearly by the number of conditions.  They only add up, but not multiply.
 - For negations, use a separate variable.  For example, if there is a and !a, then use a and na as if they are different variables, for example.
-- Don't use the malignant test patterns are needed to beat unexpected negation implementations in the usual setting.  Instead, focus on other tests like calculation or resiliency.  But alter all the basic sets have been tested, they are useful to find malignant bugs.  Those detection indicates the implementation has some quality issue as it probably indicates the variable scopes are not well defined or controled.
+- Don't use the malignant test patterns usually.  They are only needed to find hidden unexpected negation implementation errors in the usual setting.  Instead, focus on other types of tests like calculation or variations within conditions.  However, after all the basic sets have been tested, they are useful to find malignant bugs.  Those detection indicates the implementation has some quality issue as it probably indicates the variable scopes are not well defined or controled.
 - THE TOOL CAN BE USED TO TEST YOUR BOOLEAN EXPRESSIONS AS WELL, NOT TO MENTION.
 
 
