@@ -1,7 +1,7 @@
 # Name: DNF_Regression_solver
 # Author: tomio kobayashi
-# Version: 2.1.2
-# Date: 2023/12/11
+# Version: 2.1.3
+# Date: 2023/12/12
 
 import itertools
     
@@ -18,6 +18,7 @@ class DNF_Regression_solver:
         return ret
 
     def solve(file_path, check_negative=False, max_dnf_len=6, drop_fake=False):
+
 # file_path: input file in tab-delimited text
 # check_negative: enable to check the negative conditions or not.  This one is very heavy.
 # max_dnf_len: max length of AND clauses in output DNF.  
@@ -26,7 +27,7 @@ class DNF_Regression_solver:
 
         # Example usage:
         # file_path = '/kaggle/input/dnf-regression/dnf_regression.txt'
-    #     file_path = '/kaggle/input/tomio5/dnf_regression.txt'
+        # file_path = '/kaggle/input/tomio5/dnf_regression.txt'
 
         with open(file_path, 'r') as f:
             inp = [line.strip().split('\t') for line in f]
@@ -134,7 +135,8 @@ class DNF_Regression_solver:
         not_picked = [inp[0][ii] for ii in range(len(inp[0])-1) if inp[0][ii] not in perm_vars]
 
         print("")
-        print("Unsolved variables - " + str(len(not_picked)) + "/" + str(len(perm_vars)))
+#         print("Unsolved variables - " + str(len(not_picked)) + "/" + str(len(perm_vars)))
+        print("Unsolved variables - " + str(len(not_picked)) + "/" + str(len(inp[0])-1))
         print("--------------------------------")
         print(not_picked)
 
