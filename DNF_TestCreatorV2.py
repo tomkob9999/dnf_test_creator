@@ -1,5 +1,5 @@
 # author: tomio kobayashi
-# version 2.0.1
+# version 2.0.2
 # published date: 2023/12/17
 
 import re
@@ -75,30 +75,21 @@ class DNF_Test_Creater:
             if res[i]:
                 wincl.append(i)
 
+                
         dicres = dict([(clist2[i], res[i]) for i in range(len(clist2))])
         dicrank = dict([(clist2[i], 99) for i in range(len(clist2))])
-        staying = True
-        while staying:
-            staying = False
 
-            for i in range(len(wincl)-1):
-                for j in range(i+1, len(wincl), 1):
-                    this_ind = i
-                    next_ind = j
-                    if wincl[this_ind] & wincl[next_ind] == wincl[this_ind]:
-                        wincl.pop(next_ind)
-                        staying = True
-                        break
-                    elif wincl[this_ind] & wincl[next_ind] == wincl[next_ind]:
-                        wincl.pop(this_ind)
-                        staying = True
-                        break
-                if staying:
-                    break
-    
-        for s in wincl:
+        winwin = list()
+        for w in sorted([(len(DNF_Test_Creater.convBin2Pos(w, numvars)), w) for w in wincl]):
+            found = False
+            for ww in winwin:
+                if w[1] & ww == ww:
+                    found = True
+            if not found:
+                winwin.append(w[1])
+                
+        for s in winwin:
             dicrank[s] = 0
-            
 
         for k in [k for k, v in dicrank.items() if v == 0]:
             pospos = DNF_Test_Creater.convBin2Pos(k, numvars)
