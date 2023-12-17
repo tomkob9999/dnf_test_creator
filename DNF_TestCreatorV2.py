@@ -1,9 +1,8 @@
 # author: tomio kobayashi
-# version 2.0.0
+# version 2.0.1
 # published date: 2023/12/17
 
 import re
-import copy
 
 class DNF_Test_Creater:
 
@@ -130,7 +129,7 @@ class DNF_Test_Creater:
                                 if dicrank[newkey] > i and not dicres[newkey]:
                                     dicrank[newkey] = i
 
-        listrank = sorted([k, v] for k, v in dicrank.items())
+        listrank = sorted([[k, v] for k, v in dicrank.items()], reverse=True)
 
         print("")
         print("Number of Cartesian Product-Based Test Cases - " + str(len(clist2)))
@@ -140,7 +139,7 @@ class DNF_Test_Creater:
 
         lenall = 0
         for n in range(rank_depth+1):
-            ml = sorted([f for f in listrank if f[1] == n and dicres[f[0]]])
+            ml = sorted([f for f in listrank if f[1] == n and dicres[f[0]]], reverse=True)
             print("RANK - " + str(n))
             print("-------------------------")
             print("Suggested True Test Cases - " + str(len(ml)))
@@ -150,7 +149,7 @@ class DNF_Test_Creater:
             for f in ml:
                 print([tokens[t] for t in DNF_Test_Creater.convBin2Pos(f[0], numvars)])
             print("")
-            ml2 = sorted([f for f in listrank if f[1] == n and not dicres[f[0]]])
+            ml2 = sorted([f for f in listrank if f[1] == n and not dicres[f[0]]], reverse=True)
             print("Suggested False Test Cases - " + str(len(ml2)))
             lenall += len(ml2)
             print("--------")
@@ -174,6 +173,7 @@ class DNF_Test_Creater:
                 print("\t".join(DNF_Test_Creater.convBin2List2(f[0], numvars)) + "\t" + ("1" if dicres[f[0]] else "0") + "\t" + str(dicrank[f[0]]))
             for f in [f for f in listrank if f[1] == n and not dicres[f[0]]]:
                 print("\t".join(DNF_Test_Creater.convBin2List2(f[0], numvars)) + "\t" + ("1" if dicres[f[0]] else "0") + "\t" + str(dicrank[f[0]]))
+        
 
 
 inp = "(a & (b | ((g | k) & i)) & c) | (d & (e | (h & j) & f))" # 15/2048 (11)
