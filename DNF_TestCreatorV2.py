@@ -1,5 +1,5 @@
 # author: tomio kobayashi
-# version 2.0.3
+# version 2.0.4
 # published date: 2023/12/18
 
 import re
@@ -125,20 +125,21 @@ class DNF_Test_Creater:
         for j in range(rank_depth):
             for k in range(rank_depth):
                 if j+k < rank_depth:
+                    this_rank = j + k + 1
                     for f in [f for f in listrank if f[1] == j and not dicres[f[0]]]:
                         for t in trueghost[k]:
                             newkey = f[0] | t
-                            if dicrank[newkey] > i and not dicres[newkey]:
-                                dicrank[newkey] = i
+                            if dicrank[newkey] > this_rank and not dicres[newkey]:
+                                dicrank[newkey] = this_rank
                         for f2 in [f2 for f2 in listrank if f[0] != f2[0] and not dicres[f2[0]]]:
                             newkey = f[0] | f2[0]
-                            if dicrank[newkey] > i and not dicres[newkey]:
-                                dicrank[newkey] = 1 
+                            if dicrank[newkey] > this_rank and not dicres[newkey]:
+                                dicrank[newkey] = this_rank
                     for f in trueghost[j]:
                         for t in trueghost[k]:
                             newkey = f | t
-                            if dicrank[newkey] > i and not dicres[newkey]:
-                                dicrank[newkey] = i
+                            if dicrank[newkey] > this_rank and not dicres[newkey]:
+                                dicrank[newkey] = this_rank
 
         listrank = sorted([[k, v] for k, v in dicrank.items()], reverse=True)
 
