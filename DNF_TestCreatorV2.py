@@ -1,8 +1,9 @@
 # author: tomio kobayashi
-# version 2.0.4
-# published date: 2023/12/18
+# version 2.0.5
+# published date: 2023/12/19
 
 import re
+import copy
 
 class DNF_Test_Creater:
 
@@ -14,6 +15,7 @@ class DNF_Test_Creater:
             return eval(__inp___ + " >= 1")
 
     def convList2bin(t, width):
+#         [1, 3] -> 0b0101
         i = 1
         ret = 0
         for iii in range(len(t)):
@@ -22,6 +24,11 @@ class DNF_Test_Creater:
                 ret = ret | ii
         return ret
 
+
+    def convList2bin2(t, width):
+#         ["0", "1", "0", "1"] -> 0b0101
+        return int("".join(t), 2)
+        
 
     def convBin2Pos(x, width):
 #         "0101" --> [1, 3]
@@ -57,7 +64,6 @@ class DNF_Test_Creater:
         wincl= []
     
         trueghost = {}
-#         for i in range(rank_depth+1):
         for i in range(rank_depth):
             trueghost[i] = set()
         res = [0] * 2**numvars
@@ -75,12 +81,13 @@ class DNF_Test_Creater:
 
             if res[i]:
                 wincl.append(i)
-
                 
         dicres = dict([(clist2[i], res[i]) for i in range(len(clist2))])
         dicrank = dict([(clist2[i], 99) for i in range(len(clist2))])
+        dicTup = dict([(clist2[i], DNF_Test_Creater.convBin2List2(clist2[i], numvars)) for i in range(len(clist2))])
 
         winwin = list()
+#         create Rank 0 positive sets (DNF)
         for w in sorted([(len(DNF_Test_Creater.convBin2Pos(w, numvars)), w) for w in wincl]):
             found = False
             for ww in winwin:
@@ -91,60 +98,29 @@ class DNF_Test_Creater:
                 
         for s in winwin:
             dicrank[s] = 0
-
+#         create Rank 0 negative sets
         for k in [k for k, v in dicrank.items() if v == 0]:
             pospos = DNF_Test_Creater.convBin2Pos(k, numvars)
             for p in pospos:
                 dicrank[DNF_Test_Creater.offbit(k, p, numvars)] = 0
             
         trueghost_all = set()
-    
-#         Find false sets that are one case away from previous false
-#        Find ghost true (negatives of true patterns)
+
+#         add one change to the previous rank
         for i in range(rank_depth):
             for k in [k for k, v in dicrank.items() if v == i]:
-                if dicres[k]:
-                    pospos = DNF_Test_Creater.convBin2Pos0(k, numvars)
-                else:
-                    pospos = DNF_Test_Creater.convBin2Pos(k, numvars)
-                for p in pospos:
-                    offb = DNF_Test_Creater.offbit(k, p, numvars)
+                tup = dicTup[k]
+                for j in range(len(tup)):
+                    tup2 = copy.deepcopy(tup)
+                    tup2[j] = "1" if tup2[j] == "0" else "0"
+                    offb = DNF_Test_Creater.convList2bin2(tup2, numvars)
                     if dicrank[offb] > i + 1:
                         dicrank[offb] = i + 1
-                        if dicres[k]:
-                            if not dicres[offb ^ k] and (offb ^ k) not in trueghost_all:
-                                trueghost[i].add(offb ^ k)
-                                trueghost_all.add(offb ^ k)
-
-        listrank = sorted([k, v] for k, v in dicrank.items())
-        
-        # Find mixtures
-        # true ghost | false
-        # true ghost | true ghost
-        # false | false
-        for j in range(rank_depth):
-            for k in range(rank_depth):
-                if j+k < rank_depth:
-                    this_rank = j + k + 1
-                    for f in [f for f in listrank if f[1] == j and not dicres[f[0]]]:
-                        for t in trueghost[k]:
-                            newkey = f[0] | t
-                            if dicrank[newkey] > this_rank and not dicres[newkey]:
-                                dicrank[newkey] = this_rank
-                        for f2 in [f2 for f2 in listrank if f[0] != f2[0] and not dicres[f2[0]]]:
-                            newkey = f[0] | f2[0]
-                            if dicrank[newkey] > this_rank and not dicres[newkey]:
-                                dicrank[newkey] = this_rank
-                    for f in trueghost[j]:
-                        for t in trueghost[k]:
-                            newkey = f | t
-                            if dicrank[newkey] > this_rank and not dicres[newkey]:
-                                dicrank[newkey] = this_rank
 
         listrank = sorted([[k, v] for k, v in dicrank.items()], reverse=True)
 
         print("")
-        print("Number of Cartesian Product-Based Test Cases - " + str(len(clist2)))
+        print("Full-Combination Test Dataset - " + str(len(clist2)))
         print(" including true cases - " + str(len([r for r in res if r])))
         print("=========")
 
@@ -154,7 +130,7 @@ class DNF_Test_Creater:
             ml = sorted([f for f in listrank if f[1] == n and dicres[f[0]]], reverse=True)
             print("RANK - " + str(n))
             print("-------------------------")
-            print("Suggested True Test Cases - " + str(len(ml)))
+            print("Suggested True Test Dataset - " + str(len(ml)))
             lenall += len(ml)
             print("--------")
             # Raw Pattern
@@ -162,7 +138,7 @@ class DNF_Test_Creater:
                 print([tokens[t] for t in DNF_Test_Creater.convBin2Pos(f[0], numvars)])
             print("")
             ml2 = sorted([f for f in listrank if f[1] == n and not dicres[f[0]]], reverse=True)
-            print("Suggested False Test Cases - " + str(len(ml2)))
+            print("Suggested False Test Dataset - " + str(len(ml2)))
             lenall += len(ml2)
             print("--------")
             for f in ml2:
