@@ -1,6 +1,6 @@
 # author: tomio kobayashi
-# version 2.0.2
-# published date: 2023/12/17
+# version 2.0.3
+# published date: 2023/12/18
 
 import re
 
@@ -57,7 +57,8 @@ class DNF_Test_Creater:
         wincl= []
     
         trueghost = {}
-        for i in range(rank_depth+1):
+#         for i in range(rank_depth+1):
+        for i in range(rank_depth):
             trueghost[i] = set()
         res = [0] * 2**numvars
 
@@ -96,6 +97,10 @@ class DNF_Test_Creater:
             for p in pospos:
                 dicrank[DNF_Test_Creater.offbit(k, p, numvars)] = 0
             
+        trueghost_all = set()
+    
+#         Find false sets that are one case away from previous false
+#        Find ghost true (negatives of true patterns)
         for i in range(rank_depth):
             for k in [k for k, v in dicrank.items() if v == i]:
                 if dicres[k]:
@@ -107,18 +112,33 @@ class DNF_Test_Creater:
                     if dicrank[offb] > i + 1:
                         dicrank[offb] = i + 1
                         if dicres[k]:
-                            if not dicres[offb ^ k]:
-                                trueghost[i+1].add(offb ^ k)
+                            if not dicres[offb ^ k] and (offb ^ k) not in trueghost_all:
+                                trueghost[i].add(offb ^ k)
+                                trueghost_all.add(offb ^ k)
+
         listrank = sorted([k, v] for k, v in dicrank.items())
-        for i in range(1, rank_depth, 1):
-            for j in range(1, rank_depth, 1):
-                for k in range(1, rank_depth, 1):
-                    if j+k == i:
-                        for f in [f for f in listrank if f[1] == j and not dicres[f[0]]]:
-                            for t in trueghost[k]:
-                                newkey = f[0] | t
-                                if dicrank[newkey] > i and not dicres[newkey]:
-                                    dicrank[newkey] = i
+        
+        # Find mixtures
+        # true ghost | false
+        # true ghost | true ghost
+        # false | false
+        for j in range(rank_depth):
+            for k in range(rank_depth):
+                if j+k < rank_depth:
+                    for f in [f for f in listrank if f[1] == j and not dicres[f[0]]]:
+                        for t in trueghost[k]:
+                            newkey = f[0] | t
+                            if dicrank[newkey] > i and not dicres[newkey]:
+                                dicrank[newkey] = i
+                        for f2 in [f2 for f2 in listrank if f[0] != f2[0] and not dicres[f2[0]]]:
+                            newkey = f[0] | f2[0]
+                            if dicrank[newkey] > i and not dicres[newkey]:
+                                dicrank[newkey] = 1 
+                    for f in trueghost[j]:
+                        for t in trueghost[k]:
+                            newkey = f | t
+                            if dicrank[newkey] > i and not dicres[newkey]:
+                                dicrank[newkey] = i
 
         listrank = sorted([[k, v] for k, v in dicrank.items()], reverse=True)
 
@@ -164,7 +184,7 @@ class DNF_Test_Creater:
                 print("\t".join(DNF_Test_Creater.convBin2List2(f[0], numvars)) + "\t" + ("1" if dicres[f[0]] else "0") + "\t" + str(dicrank[f[0]]))
             for f in [f for f in listrank if f[1] == n and not dicres[f[0]]]:
                 print("\t".join(DNF_Test_Creater.convBin2List2(f[0], numvars)) + "\t" + ("1" if dicres[f[0]] else "0") + "\t" + str(dicrank[f[0]]))
-        
+
 
 
 inp = "(a & (b | ((g | k) & i)) & c) | (d & (e | (h & j) & f))" # 15/2048 (11)
