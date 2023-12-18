@@ -164,6 +164,7 @@ class DNF_Test_Creater:
 
 
 
+
 inp = "(a & (b | ((g | k) & i)) & c) | (d & (e | (h & j) & f))" # 15/2048 (11)
 
 
