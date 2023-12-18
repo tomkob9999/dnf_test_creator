@@ -1,6 +1,6 @@
 # DNF Test Creator
 
-Please also check Wiki to see the description of the model if interested
+Please also check Wiki to read the description of the model if interested
 https://github.com/tomkob9999/dnf_test_creator/wiki/Logic-Test-Dataset-Approximation-Model
 
 This tool automatically generates the test cases from a boolean expression (AND or OR without NOT) in the input string.  This uses the property of subsets of only AND that some input cases are guaranteed to be met if their subsets (for true cases) or supersets (for false cases) have been already met.  In this manner, only a handful cases happen to be needed to supercede the rest.
