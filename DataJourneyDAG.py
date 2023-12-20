@@ -26,16 +26,15 @@ class DataJourneyDAG:
             subgraph1 = subgraph1.reverse()
             subgraph2 = subgraph2.reverse()
 
+        # Set figure size to be larger
+        plt.figure(figsize=(12, 8))
 
+        # Draw the graph
         nx.draw(subgraph1, pos, with_labels=True, labels=node_labels, node_size=600, node_color='skyblue', font_size=8, font_color='black', font_weight='bold', arrowsize=10, edgecolors='black', linewidths=1)
-        # Draw selected vertices with a different color for target
         nx.draw(subgraph2, pos, with_labels=True, labels=node_labels, node_size=1000, node_color='pink', font_size=8, font_color='black', font_weight='bold', arrowsize=10, edgecolors='black', linewidths=1)
 
-        # Display the plot
-        fig = plt.figure(1, figsize=(100, 100), dpi=60)
         plt.title(title)
         plt.show()
-
 
     def data_import(self, file_path):
 #         Define rows as TO and columns as FROM
