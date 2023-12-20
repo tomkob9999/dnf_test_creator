@@ -1,4 +1,4 @@
-# Verwsion: 1.0.1
+# Verwsion: 1.0.2
 # Last Update: 2023/12/20
 # Authoer: Tomio Kobayashi
 
@@ -14,9 +14,32 @@ class DataJourneyDAG:
         self.adjacency_matrix_T = []
         self.size_matrix = 0
         
+    def adjacency_matrix_to_edge_list(self, adc_matrix):
+        """
+        Converts an adjacency matrix to an edge list.
+
+        Args:
+            adjacency_matrix: A 2D list representing the adjacency matrix.
+
+        Returns:
+            A list of tuples, where each tuple represents an edge (source node, target node).
+        """
+
+        edge_list = []
+        num_nodes = len(adc_matrix)
+
+        for i in range(num_nodes):
+            for j in range(num_nodes):
+                if adc_matrix[i][j] == 1:
+                    edge_list.append((i, j))  # Add edges only for non-zero entries
+
+        return edge_list
+
     def draw_selected_vertices_reverse(self, adj_matrix, selected_vertices1, selected_vertices2, title, node_labels, pos, reverse=False):
         # Create a directed graph from the adjacency matrix
-        G = nx.DiGraph(adj_matrix)
+        
+#         G = nx.DiGraph(adj_matrix)
+        G = nx.DiGraph(self.adjacency_matrix_to_edge_list(adj_matrix))
 
         # Create a subgraph with only the selected vertices
         subgraph1 = G.subgraph(selected_vertices1)
