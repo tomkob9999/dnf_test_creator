@@ -82,12 +82,3 @@ a	b	c	d	e	f	g	Res
 
 1	1	1	1	1	0	1	1
 
- -----------------------
-
-
-# Data Journey DAG
-
-### Input: tab-deliited file containing adjacency matrix (columns=FROM, rows=TO) with headers (adjacency_matrix2.txt as a sample)
-### Output: Graph of origin data and offspring data for the specified data element
-
-![aa8](https://github.com/tomkob9999/dnf_test_creator/assets/96751911/e4bc13da-44b6-4e12-bcb1-0558f00c0ca1)
