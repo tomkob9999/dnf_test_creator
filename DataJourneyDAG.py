@@ -150,7 +150,6 @@ class DataJourneyDAG:
             if sum(res_vector[i]) == 0:
                 break
             last_pos += 1
-        print("last_pos", last_pos)
         done = False
         largest_j = 0
         for i in range(len(res_vector)):
