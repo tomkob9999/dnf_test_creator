@@ -1,8 +1,7 @@
-# Verwsion: 1.0.0
+# Verwsion: 1.0.1
 # Last Update: 2023/12/20
 # Authoer: Tomio Kobayashi
 
-import pandas as pd
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -80,9 +79,6 @@ class DataJourneyDAG:
                 if res_vector[i][j] != 0 and j != 0: 
                     selected_vertices1.add(j)
 
-        last_pos = 0
-
-
         position = {}
         colpos = {}
         posfill = set()
@@ -90,6 +86,7 @@ class DataJourneyDAG:
         for i in range(len(res_vector)):
             colpos[i] = 0
 
+        last_pos = 0
         for i in range(len(res_vector)):
             if sum(res_vector[i]) == 0:
                 break
@@ -121,8 +118,8 @@ class DataJourneyDAG:
         selected_vertices2 = [target_vertex]
 
         node_labels = {i: name for i, name in enumerate(self.vertex_names) if i in selected_vertices1 or i in selected_vertices2}
-
-        self.draw_selected_vertices_reverse(self.adjacency_matrix, selected_vertices1,selected_vertices2, title="Data Origins", node_labels=node_labels, pos=position)
+        title = "Data Origins (" + str(last_pos-2) + " stages)"
+        self.draw_selected_vertices_reverse(self.adjacency_matrix, selected_vertices1,selected_vertices2, title=title, node_labels=node_labels, pos=position)
 
         
     def drawOffsprings(self, target_vertex):
@@ -148,12 +145,16 @@ class DataJourneyDAG:
             for j in range(len(res_vector[i])):
                 if res_vector[i][j] != 0 and j != self.size_matrix - 1 and j != 0: 
                     selected_vertices1.add(j)
-
+        last_pos = 0
+        for i in range(len(res_vector)):
+            if sum(res_vector[i]) == 0:
+                break
+            last_pos += 1
+        print("last_pos", last_pos)
         done = False
         largest_j = 0
         for i in range(len(res_vector)):
             if sum(res_vector[i]) == 0:
-                # position[j] = (largest_j,1) 
                 break
             nonzero = 0
             for j in range(len(res_vector[i])):
@@ -169,14 +170,14 @@ class DataJourneyDAG:
                     colpos[i] += 1
                     if largest_j < j:
                         largest_j = j
-                    # break
                     
         selected_vertices1 = list(selected_vertices1)
         selected_vertices2 = [target_vertex]
 
         node_labels = {i: name for i, name in enumerate(self.vertex_names) if i in selected_vertices1 or i in selected_vertices2}
 
-        self.draw_selected_vertices_reverse(self.adjacency_matrix_T, selected_vertices1,selected_vertices2, title="Data Offsprings", node_labels=node_labels, pos=position, reverse=True)
+        title = "Data Offsprings (" + str(last_pos-2) + " stages)"
+        self.draw_selected_vertices_reverse(self.adjacency_matrix_T, selected_vertices1,selected_vertices2, title=title, node_labels=node_labels, pos=position, reverse=True)
 
 
 
