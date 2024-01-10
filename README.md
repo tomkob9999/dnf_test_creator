@@ -57,28 +57,3 @@ DNF_Test_Creater.solve(inp)
 NOTE:
   The latest version added negation levels for both true and false cases.  It is known that the basic test cases can be beat with using negations.  For example, for (a, b, c), "1 1 0" == False cannot lead to "1 0 0" == False if (a, b, !c) condition is used either by mistake, or maliciously.  It comes the notion of nth true/false orders.  Order indicates how much apart (number of variables difference) from the basic set, which are the true cases and the false cases made by flipping one of the variables in each true case.  The parameters allow to generate the test cases based on the number of orders expected.  But the number of such test cases will increase exponentially to the number of orders.
 
-
- -----------------------
-
-
-# DNF Regression Solver
-
-This script does the inversion of the above.  The above one goes DNF -> datasets, and this one goes datasets -> DNF.  It finds the bool expression from the input data like Linear Regression finds coefficients of covectors.  It does not use either linear regression or decision tree logic, though.  Instead, it looks for DNF by matching the true and false identitity records, which is the essence used in DNF Test Creator as well.  The runtime has degraded from linear to non-linear since 1.4 upgrade to accomodate realistic data that do not contain Cartesian product of variable values.
-
-
-HOW TO RUN:
-
-file_path = '/kaggle/input/tomio5/dnf_regression.txt'
-
-DNF_Regression_solver.solve(file_path)
-
-The input file is a tab-delimited text file where the fields are conditions indicated by 1 or 0, and the last field (or column) indicates the result as sampled below.  Also, a sample file dnf_regression.txt is in the repository.
-
-a	b	c	d	e	f	g	Res
-
-1	1	1	1	1	1	1	1
-
-1	1	1	1	1	1	0	1
-
-1	1	1	1	1	0	1	1
-
