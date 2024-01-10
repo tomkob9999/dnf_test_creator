@@ -1,7 +1,7 @@
 # Name: DNF_Regression_solver
 # Author: tomio kobayashi
-# Version: 2.1.4
-# Date: 2024/01/10
+# Version: 2.1.5
+# Date: 2024/01/11
 
 import itertools
 from sympy.logic import boolalg
@@ -18,7 +18,7 @@ class DNF_Regression_solver:
             ret = ret | ii
         return ret
 
-    def solve(file_path, check_negative=False, max_dnf_len=6, drop_fake=False):
+    def solve(file_path, max_dnf_len=6, check_negative=True, check_false=True):
 
 # file_path: input file in tab-delimited text
 # check_negative: enable to check the negative conditions or not.  This one is very heavy.
@@ -95,7 +95,7 @@ class DNF_Regression_solver:
         dnf_perf_n = list()
         raw_perf_n = list()
         raw_perf2_n = list()
-        if check_negative:
+        if check_false:
             for s in range(max_dnf_len):
                 len_dnf = s + 1
                 l = [ii for ii in range(numvars)]
@@ -123,15 +123,16 @@ class DNF_Regression_solver:
         for dn in raw_perf_n:
             dnf_perf_n.append([inp[0][ii] for ii in dn])
 
-        set_dnf_pos = set([" (" + s + ") " for s in [" & ".join(a) for a in dnf_perf]])
+        set_dnf_true = set([" (" + s + ") " for s in [" & ".join(a) for a in dnf_perf]])
         dnf_common = None
-        if check_negative:
-            set_dnf_neg = set(str(boolalg.to_dnf("(" + ") & (".join([" | ".join(a) for a in [[a[2:] if a[0:2] == "n_" else "n_" + a for a in aa] for aa in dnf_perf_n]]) + ")")).split("|"))
-            dnf_common = set_dnf_pos & set_dnf_neg
+        set_dnf_false = None
+        if check_false:
+            set_dnf_false = set(str(boolalg.to_dnf("(" + ") & (".join([" | ".join(a) for a in [[a[2:] if a[0:2] == "n_" else "n_" + a for a in aa] for aa in dnf_perf_n]]) + ")")).split("|"))
+            dnf_common = set_dnf_true & set_dnf_false
         else:
-            dnf_common = set_dnf_pos
+            dnf_common = set_dnf_true
             
-        if check_negative:
+        if check_false:
             print("")
             print("DNF COMMON - " + str(len(dnf_common)))
             print("--------------------------------")
@@ -140,18 +141,18 @@ class DNF_Regression_solver:
                 print("|".join(dnf_common))
             
         print("")
-        print("DNF POSITIVE PATTERN - " + str(len(set_dnf_pos)))
+        print("DNF TRUE - " + str(len(set_dnf_true)))
         print("--------------------------------")
 
-        if len(set_dnf_pos) > 0:
-            print("|".join(set_dnf_pos))
+        if len(set_dnf_true) > 0:
+            print("|".join(set_dnf_true))
 
-        if check_negative:
+        if check_false:
             print("")
-            print("DNF NEGATIVE PATTERN - " + str(len(set_dnf_neg)))
+            print("DNF FALSE - " + str(len(set_dnf_false)))
             print("--------------------------------")
-            if len(set_dnf_neg) > 0:
-                print("|".join(set_dnf_neg))
+            if len(set_dnf_false) > 0:
+                print("|".join(set_dnf_false))
             
         perm_vars = list(set([xx for x in dnf_perf for xx in x] + [xx for x in dnf_perf_n for xx in x]))
         not_picked = [inp[0][ii] for ii in range(len(inp[0])-1) if inp[0][ii] not in perm_vars]
