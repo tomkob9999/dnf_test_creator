@@ -1,10 +1,11 @@
 # Name: DNF_Regression_solver
 # Author: tomio kobayashi
-# Version: 2.1.3
-# Date: 2023/12/12
+# Version: 2.1.4
+# Date: 2024/01/10
 
 import itertools
-    
+from sympy.logic import boolalg
+
 class DNF_Regression_solver:
 # This version has no good matches
 # Instead, all true matches are first added, and some are removed when 
@@ -62,7 +63,6 @@ class DNF_Regression_solver:
 
         dnf_perf = list()
         raw_perf = list()
-
         raw_perf2 = list()
         for s in range(max_dnf_len):
             len_dnf = s + 1
@@ -87,51 +87,73 @@ class DNF_Regression_solver:
 
                 raw_perf.append([ii for ii in p_list[i]])
                 raw_perf2.append(b)
-
-        if drop_fake:
-            fake_raw = []
-            for i in range(len(raw_perf)):
-
-                b = raw_perf2[i]
-                count_false = 0
-                found_true = False
-
-                for jj in raw_perf[i]:
-                    jj2 = 1 << (numvars - jj - 1)
-                    jj3 = b ^ jj2
-                    rdic_res = [(k, v) for k,v in dic.items() if k & jj3 == jj3 and v == "1"]
-                    rdic_resxx = [(bin(k), v) for k,v in dic.items() if k & jj3 == jj3 and v == "1"]
-                    if len(rdic_res) == 0:
-                        continue
-                    is_any_match = False
-                    for f in rdic_res:
-                        for kk in raw_perf2:
-                            if kk == kk & f[0]:
-                                is_any_match = True
-                                break
-                        if is_any_match:
-                            break
-                    if not is_any_match:
-                        fake_raw.append(raw_perf[i])
-                        break
-            for f in fake_raw:
-                for iii in range(len(raw_perf)):
-                    if f == raw_perf[iii]:
-                        raw_perf.pop(iii)
-                        break
-
+        
         for dn in raw_perf:
             dnf_perf.append([inp[0][ii] for ii in dn])
 
+            
+        dnf_perf_n = list()
+        raw_perf_n = list()
+        raw_perf2_n = list()
+        if check_negative:
+            for s in range(max_dnf_len):
+                len_dnf = s + 1
+                l = [ii for ii in range(numvars)]
+                p_list = list(itertools.combinations(l, len_dnf))
+
+                true_test_pass = True
+                for i in range(len(p_list)):
+                    match_and_break = False
+                    b = DNF_Regression_solver.convTuple2bin(p_list[i], numvars)
+                    for p in raw_perf2_n:
+                        if p == b & p:
+                            match_and_break = True
+                            break
+                    if match_and_break:
+                        continue
+                    r = [v for k,v in dic.items() if k & b == b]
+                    if len(r) == 0:
+                        continue
+                    if len([f for f in r if f == "1"]) > 0:
+                        continue
+
+                    raw_perf_n.append([ii for ii in p_list[i]])
+                    raw_perf2_n.append(b)
+        
+        for dn in raw_perf_n:
+            dnf_perf_n.append([inp[0][ii] for ii in dn])
+
+        set_dnf_pos = set([" (" + s + ") " for s in [" & ".join(a) for a in dnf_perf]])
+        dnf_common = None
+        if check_negative:
+            set_dnf_neg = set(str(boolalg.to_dnf("(" + ") & (".join([" | ".join(a) for a in [[a[2:] if a[0:2] == "n_" else "n_" + a for a in aa] for aa in dnf_perf_n]]) + ")")).split("|"))
+            dnf_common = set_dnf_pos & set_dnf_neg
+        else:
+            dnf_common = set_dnf_pos
+            
+        if check_negative:
+            print("")
+            print("DNF COMMON - " + str(len(dnf_common)))
+            print("--------------------------------")
+
+            if len(dnf_common) > 0:
+                print("|".join(dnf_common))
+            
         print("")
-        print("DNF - " + str(len(dnf_perf)))
+        print("DNF POSITIVE PATTERN - " + str(len(set_dnf_pos)))
         print("--------------------------------")
 
-        if len(dnf_perf) > 0:
-            print("(" + ") | (".join([" & ".join(a) for a in dnf_perf]) + ")")
+        if len(set_dnf_pos) > 0:
+            print("|".join(set_dnf_pos))
 
-
-        perm_vars = [xx for x in dnf_perf for xx in x]
+        if check_negative:
+            print("")
+            print("DNF NEGATIVE PATTERN - " + str(len(set_dnf_neg)))
+            print("--------------------------------")
+            if len(set_dnf_neg) > 0:
+                print("|".join(set_dnf_neg))
+            
+        perm_vars = list(set([xx for x in dnf_perf for xx in x] + [xx for x in dnf_perf_n for xx in x]))
         not_picked = [inp[0][ii] for ii in range(len(inp[0])-1) if inp[0][ii] not in perm_vars]
 
         print("")
@@ -139,6 +161,7 @@ class DNF_Regression_solver:
         print("Unsolved variables - " + str(len(not_picked)) + "/" + str(len(inp[0])-1))
         print("--------------------------------")
         print(not_picked)
+
 
 
 file_path = '/kaggle/input/tomio2/dnf_regression.txt'
