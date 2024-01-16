@@ -30,10 +30,11 @@ The high level algorithm follows as follows.
 
 - Simplified_DNF(Input Expression) -> Converted_To_Row_Set(DNF_Format(Input Expression)) == {true cases}
 
-3. Create False cases by extracting each of selement from each condition connected by OR)
+3. Create False cases using De Morgan Law namely by extracting each of selement from each condition connected by OR)
 
 - {true cases} -> Variable_Droppped_One_At_a_Time({true cases}) == {false cases}
 
+The ranks have been introduced.  The true DNF and their false CNF derived by De Morgan Law (Step 3 above) are marked as Rank 0 cases.  Using Rank 0 cases as base sets, test cases are added by changing one variable at a time. The result of changing one variable are of previous rank+1.  They can explain as distance to the base cases.  The higher the ranks, the significance is lower as lower ranks.
 
 TIPS:
 
